@@ -124,7 +124,9 @@ module "nxos_vpc" {
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_dn"></a> [dn](#output\_dn) | Distinguished name of the object. |
 
 ## Resources
 
