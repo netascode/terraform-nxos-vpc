@@ -10,13 +10,30 @@ Model Documentation: [Link](https://developer.cisco.com/docs/cisco-nexus-3000-an
 ## Examples
 
 ```hcl
-module "nxos_scaffolding" {
+module "nxos_vpc" {
   source  = "netascode/scaffolding/nxos"
   version = ">= 0.0.1"
 
-  id          = "eth1/10"
-  description = "My Description"
-  mode        = "trunk"
+  switch_1_name             = "SWITCH1"
+  switch_2_name             = "SWITCH2"
+  vpc_domain_id             = 123
+  keepalive_vrf             = "management"
+  keepalive_ip_switch_1     = "10.82.143.17"
+  keepalive_ip_switch_2     = "10.82.143.18"
+  peer_link_port_channel_id = 10
+  peer_link_interfaces      = ["eth1/10", "eth1/11"]
+  virtual_port_channels = [
+    {
+      id         = 100
+      mode       = "trunk"
+      interfaces = ["eth1/20", "eth1/21"]
+    },
+    {
+      id         = 200
+      mode       = "access"
+      interfaces = ["eth1/23"]
+    }
+  ]
 }
 ```
 
@@ -37,20 +54,36 @@ module "nxos_scaffolding" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_id"></a> [id](#input\_id) | Interface ID. Must match first field in the output of `show intf brief`. Example: `eth1/1`. | `string` | n/a | yes |
-| <a name="input_description"></a> [description](#input\_description) | Interface description. | `string` | `""` | no |
-| <a name="input_mode"></a> [mode](#input\_mode) | Interface mode. Choices: `access`, `trunk`, `fex-fabric`, `dot1q-tunnel`, `promiscuous`, `host`, `trunk_secondary`, `trunk_promiscuous`, `vntag`. | `string` | `"access"` | no |
+| <a name="input_switch_1_name"></a> [switch\_1\_name](#input\_switch\_1\_name) | Switch 1 Name. | `string` | n/a | yes |
+| <a name="input_switch_2_name"></a> [switch\_2\_name](#input\_switch\_2\_name) | Switch 2 Name. | `string` | n/a | yes |
+| <a name="input_vpc_domain_id"></a> [vpc\_domain\_id](#input\_vpc\_domain\_id) | VPC Domain ID. | `number` | n/a | yes |
+| <a name="input_keepalive_ip_switch_1"></a> [keepalive\_ip\_switch\_1](#input\_keepalive\_ip\_switch\_1) | Switch 1 Keeepalive IP. | `string` | n/a | yes |
+| <a name="input_keepalive_ip_switch_2"></a> [keepalive\_ip\_switch\_2](#input\_keepalive\_ip\_switch\_2) | Switch 2 Keeepalive IP. | `string` | n/a | yes |
+| <a name="input_keepalive_vrf"></a> [keepalive\_vrf](#input\_keepalive\_vrf) | Switch 1 & Switch 2 Keepalive VRF. | `string` | n/a | yes |
+| <a name="input_peer_link_interfaces"></a> [peer\_link\_interfaces](#input\_peer\_link\_interfaces) | List of interfaces part of the vPC Peer-Link. | `list(string)` | n/a | yes |
+| <a name="input_peer_link_port_channel_id"></a> [peer\_link\_port\_channel\_id](#input\_peer\_link\_port\_channel\_id) | vPC Peer-Link Port-Channel ID. | `number` | n/a | yes |
+| <a name="input_virtual_port_channels"></a> [virtual\_port\_channels](#input\_virtual\_port\_channels) | List of vPCs. | <pre>list(object({<br>    id         = number<br>    mode       = string<br>    interfaces = list(string)<br>  }))</pre> | n/a | yes |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_dn"></a> [dn](#output\_dn) | Distinguished name of `l1PhysIf` object. |
-| <a name="output_id"></a> [id](#output\_id) | Interface ID. |
+No outputs.
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [nxos_rest.l1PhysIf](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/rest) | resource |
+| [nxos_feature_lacp.fmLacp](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/feature_lacp) | resource |
+| [nxos_feature_vpc.mVpc](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/feature_vpc) | resource |
+| [nxos_physical_interface.l1PhysIf_peer_link](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/physical_interface) | resource |
+| [nxos_physical_interface.l1PhysIf_virtual_port_channel](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/physical_interface) | resource |
+| [nxos_port_channel_interface.pcAggrIf_peer_link](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/port_channel_interface) | resource |
+| [nxos_port_channel_interface.pcAggrIf_virtual_port_channel](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/port_channel_interface) | resource |
+| [nxos_port_channel_interface_member.pcRsMbrIfs_peer_link](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/port_channel_interface_member) | resource |
+| [nxos_port_channel_interface_member.pcRsMbrIfs_virtual_port_channel](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/port_channel_interface_member) | resource |
+| [nxos_rest.vpcKeepalive_switch1](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/rest) | resource |
+| [nxos_rest.vpcKeepalive_switch2](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/rest) | resource |
+| [nxos_rest.vpcPeerLink](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/rest) | resource |
+| [nxos_vpc_domain.vpcDom](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/vpc_domain) | resource |
+| [nxos_vpc_instance.vpcInst](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/vpc_instance) | resource |
+| [nxos_vpc_interface.vpcIf](https://registry.terraform.io/providers/CiscoDevNet/nxos/latest/docs/resources/vpc_interface) | resource |
 <!-- END_TF_DOCS -->

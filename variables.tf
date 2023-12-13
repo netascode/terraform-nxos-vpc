@@ -1,26 +1,50 @@
-variable "id" {
-  description = "Interface ID. Must match first field in the output of `show intf brief`. Example: `eth1/1`."
+variable "switch_1_name" {
+  description = "Switch 1 Name."
   type        = string
 }
 
-variable "description" {
-  description = "Interface description."
+variable "switch_2_name" {
+  description = "Switch 2 Name."
   type        = string
-  default     = ""
-
-  validation {
-    condition     = can(regex("^.{0,254}$", var.description))
-    error_message = " Maximum characters: 254."
-  }
 }
 
-variable "mode" {
-  description = "Interface mode. Choices: `access`, `trunk`, `fex-fabric`, `dot1q-tunnel`, `promiscuous`, `host`, `trunk_secondary`, `trunk_promiscuous`, `vntag`."
-  type        = string
-  default     = "access"
+variable "vpc_domain_id" {
+  description = "VPC Domain ID."
+  type        = number
+}
 
-  validation {
-    condition     = contains(["access", "trunk", "fex-fabric", "dot1q-tunnel", "promiscuous", "host", "trunk_secondary", "trunk_promiscuous", "vntag"], var.mode)
-    error_message = "Valid values are `access`, `trunk`, `fex-fabric`, `dot1q-tunnel`, `promiscuous`, `host`, `trunk_secondary`, `trunk_promiscuous` or `vntag`."
-  }
+
+variable "keepalive_ip_switch_1" {
+  description = "Switch 1 Keeepalive IP."
+  type        = string
+}
+
+variable "keepalive_ip_switch_2" {
+  description = "Switch 2 Keeepalive IP."
+  type        = string
+}
+
+
+variable "keepalive_vrf" {
+  description = "Switch 1 & Switch 2 Keepalive VRF."
+  type        = string
+}
+
+variable "peer_link_interfaces" {
+  description = "List of interfaces part of the vPC Peer-Link."
+  type        = list(string)
+}
+
+variable "peer_link_port_channel_id" {
+  description = "vPC Peer-Link Port-Channel ID."
+  type        = number
+}
+
+variable "virtual_port_channels" {
+  description = "List of vPCs."
+  type = list(object({
+    id         = number
+    mode       = string
+    interfaces = list(string)
+  }))
 }
