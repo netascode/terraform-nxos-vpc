@@ -11,7 +11,7 @@ Model Documentation: [Link](https://developer.cisco.com/docs/cisco-nexus-3000-an
 
 ```hcl
 module "nxos_vpc" {
-  source  = "netascode/scaffolding/nxos"
+  source  = "netascode/vpc/nxos"
   version = ">= 0.0.1"
 
   switch_1_name             = "SWITCH1"

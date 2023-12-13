@@ -13,7 +13,7 @@ Note that this example will create resources. Resources can be destroyed with `t
 
 ```hcl
 module "nxos_vpc" {
-  source  = "netascode/scaffolding/nxos"
+  source  = "netascode/vpc/nxos"
   version = ">= 0.0.1"
 
   switch_1_name             = "SWITCH1"

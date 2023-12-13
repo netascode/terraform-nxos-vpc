@@ -1,5 +1,5 @@
 module "nxos_vpc" {
-  source  = "netascode/scaffolding/nxos"
+  source  = "netascode/vpc/nxos"
   version = ">= 0.0.1"
 
   switch_1_name             = "SWITCH1"
@@ -10,7 +10,7 @@ module "nxos_vpc" {
   keepalive_ip_switch_2     = "10.82.143.18"
   peer_link_port_channel_id = 10
   peer_link_interfaces      = ["eth1/10", "eth1/11"]
-  virtual_port_channels     = [
+  virtual_port_channels = [
     {
       id         = 100
       mode       = "trunk"
